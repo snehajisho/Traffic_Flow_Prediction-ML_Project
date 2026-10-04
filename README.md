@@ -1,6 +1,7 @@
 # TRAFFIC FLOW PREDICTION
 
 **Course:** Machine Learning  (UE24CS352A)
+
 **Students:**
 
 - Sneha Angelin Jisho - PES2UG24CS507
@@ -219,5 +220,6 @@ PES2UG24CS555
 ## Course Information
 
 **Course:** Machine Learning (UE24CS352A)
+
 **Academic Term:** SEM 5
 
