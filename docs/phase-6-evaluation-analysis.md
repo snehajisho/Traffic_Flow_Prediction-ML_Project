@@ -53,18 +53,22 @@ held-out test performance.
 
 The final evaluation notebook reports Random Forest metrics after training on
 train + validation. The same-time-yesterday baseline is also evaluated on the
-existing held-out test split:
+existing held-out test split. Persistence predictions use each test row's
+current `Vol`, and Linear Regression is refit on train + validation using its
+existing feature definitions and preprocessing:
 
 | Model | MAE (vehicles) | RMSE (vehicles) |
 | :--- | ---: | ---: |
+| Persistence | 12.602656 | 17.088486 |
+| Linear Regression | 10.908557 | 14.867493 |
 | Random Forest | 9.994035 | 13.679209 |
 | Same-time yesterday | 22.546476 | 33.980542 |
 
-All 979 test rows had an exact same-series observation 24 hours before the
-forecast target, corresponding to 96 observations earlier. The test comparison
-shows lower error for Random Forest than for the same-time-yesterday baseline.
-The repository still does not report final test metrics for Persistence or
-Linear Regression, so those models cannot be ranked on the test set.
+All four models are evaluated against `target_15min` on the same 979 held-out
+test rows. The test comparison shows lower error for Random Forest than for the
+other evaluated methods. All test rows had an exact same-series same-time-
+yesterday observation 24 hours before the forecast target, corresponding to 96
+observations earlier.
 
 ### Test performance by series
 
@@ -83,15 +87,17 @@ For the selected series and period, the recorded results indicate that recent
 traffic-volume and time information were useful for 15-minute-ahead prediction.
 Random Forest had lower validation MAE/RMSE than Persistence, Linear Regression,
 and the same-time-yesterday baseline, and lower held-out test error than the
-same-time-yesterday baseline. This is a bounded finding about this experiment,
-not evidence of performance on other NYC roads or periods.
+other evaluated methods. This is a bounded finding about this experiment, not
+evidence of performance on other NYC roads or periods.
 
 Important limitations and reproducibility notes:
 
 - The data has incomplete coverage and missing timestamp intervals. A row-based lag may not always correspond to its nominal elapsed-time lag when there is a gap.
 - The same-time-yesterday baseline is implemented in the Phase 6 evaluation
-  notebook and evaluated on the existing validation and test splits; Persistence
-  and Linear Regression still have no reported final test metrics.
+  notebook and evaluated on the existing validation and test splits.
+- Linear Regression is refit on train + validation using its existing feature
+  definitions and preprocessing before held-out test evaluation. Persistence
+  uses the current row's `Vol` as its forecast.
 - `data/train.csv`, `data/validation.csv`, and `data/test.csv` are currently
   tracked in Git and are available to a fresh clone. `.gitignore` contains a
   general `*.csv` rule, but that does not affect files already tracked by Git.
@@ -103,13 +109,11 @@ Important limitations and reproducibility notes:
 ## Conclusion
 
 The Random Forest achieved the best recorded validation metrics among the
-implemented comparisons, with a held-out test MAE of 9.994035 vehicles and RMSE
-of 13.679209 vehicles. On the test split it also had lower error than the
-same-time-yesterday baseline (MAE 22.546476; RMSE 33.980542). Its errors were not
-uniform across the four directional series. Results support continued use of
-the approach for this focused project dataset, while missing reproducibility
-steps and the absence of test metrics for Persistence and Linear Regression
-limit broader comparisons.
+implemented comparisons and the lowest held-out test MAE/RMSE of the four
+evaluated methods. Its test MAE is 9.994035 vehicles and RMSE is 13.679209
+vehicles. Its errors were not uniform across the four directional series.
+Results support continued use of the approach for this focused project dataset,
+while missing reproducibility steps limit broader claims.
 
 ## Source files
 
