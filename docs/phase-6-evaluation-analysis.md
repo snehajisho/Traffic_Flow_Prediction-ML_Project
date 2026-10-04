@@ -106,6 +106,8 @@ Important limitations and reproducibility notes:
   splits from the raw subset.
 - The Stage 6 error-analysis cells in the evaluation notebook calculate additional signed-error, percentile, and forecast-hour summaries when executed. Those summaries are not included here because the notebook has not been run in the current environment to generate and verify them.
 
+- The Stage 6 error-analysis code is included in the final evaluation notebook, but those cells were not executed in the available environment. The error-analysis summaries and plots should therefore be treated as analysis code rather than saved notebook outputs; the reported model metrics were independently verified from the tracked evaluation data.
+
 ## Conclusion
 
 The Random Forest achieved the best recorded validation metrics among the
