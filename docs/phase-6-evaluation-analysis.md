@@ -72,7 +72,7 @@ Important limitations and reproducibility notes:
 - The data has incomplete coverage and missing timestamp intervals. A row-based lag may not always correspond to its nominal elapsed-time lag when there is a gap.
 - The same-time-yesterday baseline described in the project definition is not implemented in the checked-in model notebooks, so this report does not provide its metrics.
 - The recorded final test metrics are for Random Forest only; there is no comparable final test evaluation for persistence or Linear Regression.
-- The split CSVs (`train.csv`, `validation.csv`, and `test.csv`) are generated local files. The repository's `.gitignore` excludes CSV files other than the explicitly included raw subset. No tracked preprocessing script or notebook was found that regenerates these splits from the raw subset. A fresh clone therefore needs the split files supplied or the preprocessing pipeline added and documented.
+- `data/train.csv`, `data/validation.csv`, and `data/test.csv` are currently tracked in Git and are available to a fresh clone. `.gitignore` contains a general `*.csv` rule, but that does not affect files already tracked by Git. The remaining reproducibility limitation is that no tracked preprocessing script or notebook has been established that regenerates these exact prepared splits from the raw subset.
 - The Stage 6 error-analysis cells in the evaluation notebook calculate additional signed-error, percentile, and forecast-hour summaries when executed. Those summaries are not included here because the notebook has not been run in the current environment to generate and verify them.
 
 ## Conclusion
