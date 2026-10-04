@@ -31,3 +31,4 @@ Thumbs.db
 # Generated outputs
 reports/figures/
 reports/metrics/
+!data/traffic_forecasting_subset.csv
