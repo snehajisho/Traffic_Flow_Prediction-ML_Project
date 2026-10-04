@@ -32,25 +32,39 @@ The model notebooks report MAE and RMSE. Lower values indicate smaller predictio
 
 ## Validation comparison
 
-The validation metrics recorded in the Random Forest notebook are:
+The validation metrics recorded in the model notebooks and calculated for the
+same-time-yesterday baseline are:
 
 | Model | MAE (vehicles) | RMSE (vehicles) |
 | :--- | ---: | ---: |
 | Persistence | 13.846626 | 19.097318 |
 | Linear Regression | 12.441580 | 17.204182 |
 | Random Forest | 11.809888 | 16.488574 |
+| Same-time yesterday | 14.914110 | 20.629857 |
 
-Among these three implemented comparisons, Random Forest has the lowest recorded validation MAE and RMSE. These validation results are not a substitute for held-out test performance.
+For the same-time-yesterday baseline, each `target_15min` forecast is matched to
+`Vol` at the exact timestamp 24 hours before the target, within the same
+SegmentID + Direction series. All 978 validation rows had a match exactly 96
+observations earlier. Random Forest has the lowest MAE and RMSE among these
+validation comparisons. These validation results are not a substitute for
+held-out test performance.
 
 ## Final held-out test results
 
-The final evaluation notebook reports the following for Random Forest trained on train + validation:
+The final evaluation notebook reports Random Forest metrics after training on
+train + validation. The same-time-yesterday baseline is also evaluated on the
+existing held-out test split:
 
 | Model | MAE (vehicles) | RMSE (vehicles) |
 | :--- | ---: | ---: |
 | Random Forest | 9.994035 | 13.679209 |
+| Same-time yesterday | 22.546476 | 33.980542 |
 
-The repository does not report corresponding final test metrics for persistence or Linear Regression, so a model ranking on the test set cannot be made from the existing outputs.
+All 979 test rows had an exact same-series observation 24 hours before the
+forecast target, corresponding to 96 observations earlier. The test comparison
+shows lower error for Random Forest than for the same-time-yesterday baseline.
+The repository still does not report final test metrics for Persistence or
+Linear Regression, so those models cannot be ranked on the test set.
 
 ### Test performance by series
 
@@ -65,19 +79,37 @@ Performance varies across the selected series. The lowest recorded MAE is for 17
 
 ## Interpretation and limitations
 
-For the selected series and period, the recorded results indicate that recent traffic-volume and time information were useful for 15-minute-ahead prediction. The Random Forest outperformed the two implemented baselines on validation and achieved a test MAE of about 10 vehicles. This is a bounded finding about this experiment, not evidence of performance on other NYC roads or periods.
+For the selected series and period, the recorded results indicate that recent
+traffic-volume and time information were useful for 15-minute-ahead prediction.
+Random Forest had lower validation MAE/RMSE than Persistence, Linear Regression,
+and the same-time-yesterday baseline, and lower held-out test error than the
+same-time-yesterday baseline. This is a bounded finding about this experiment,
+not evidence of performance on other NYC roads or periods.
 
 Important limitations and reproducibility notes:
 
 - The data has incomplete coverage and missing timestamp intervals. A row-based lag may not always correspond to its nominal elapsed-time lag when there is a gap.
-- The same-time-yesterday baseline described in the project definition is not implemented in the checked-in model notebooks, so this report does not provide its metrics.
-- The recorded final test metrics are for Random Forest only; there is no comparable final test evaluation for persistence or Linear Regression.
-- `data/train.csv`, `data/validation.csv`, and `data/test.csv` are currently tracked in Git and are available to a fresh clone. `.gitignore` contains a general `*.csv` rule, but that does not affect files already tracked by Git. The remaining reproducibility limitation is that no tracked preprocessing script or notebook has been established that regenerates these exact prepared splits from the raw subset.
+- The same-time-yesterday baseline is implemented in the Phase 6 evaluation
+  notebook and evaluated on the existing validation and test splits; Persistence
+  and Linear Regression still have no reported final test metrics.
+- `data/train.csv`, `data/validation.csv`, and `data/test.csv` are currently
+  tracked in Git and are available to a fresh clone. `.gitignore` contains a
+  general `*.csv` rule, but that does not affect files already tracked by Git.
+  The remaining reproducibility limitation is that no tracked preprocessing
+  script or notebook has been established that regenerates these exact prepared
+  splits from the raw subset.
 - The Stage 6 error-analysis cells in the evaluation notebook calculate additional signed-error, percentile, and forecast-hour summaries when executed. Those summaries are not included here because the notebook has not been run in the current environment to generate and verify them.
 
 ## Conclusion
 
-The Random Forest achieved the best recorded validation metrics among the implemented validation comparisons and recorded a held-out test MAE of 9.994035 vehicles and RMSE of 13.679209 vehicles. Its errors were not uniform across the four directional series. Results support continued use of the approach for this focused project dataset, while missing reproducibility steps and the absence of test-set baseline comparisons limit broader claims.
+The Random Forest achieved the best recorded validation metrics among the
+implemented comparisons, with a held-out test MAE of 9.994035 vehicles and RMSE
+of 13.679209 vehicles. On the test split it also had lower error than the
+same-time-yesterday baseline (MAE 22.546476; RMSE 33.980542). Its errors were not
+uniform across the four directional series. Results support continued use of
+the approach for this focused project dataset, while missing reproducibility
+steps and the absence of test metrics for Persistence and Linear Regression
+limit broader comparisons.
 
 ## Source files
 
